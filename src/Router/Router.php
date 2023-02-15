@@ -25,7 +25,7 @@ class Router implements \App\Interfaces\RouterInterface
 	 */
 	public function matchRoute($path, $method)
 	{
-		if ( array_key_exists($method.' '.$path, $this->routes) )
+		if (array_key_exists($method.' '.$path, $this->routes))
 		{
 			return $this->routes[$method.' '.$path];
 		}
