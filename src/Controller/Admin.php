@@ -9,7 +9,7 @@ class Admin  extends Controller implements Guard
 
 	public function hasAccess()
 	{
-		return false;
+		return isset($_COOKIE['auth']);
 	}
 
 	public function action_admin()
@@ -18,5 +18,9 @@ class Admin  extends Controller implements Guard
 		{
 			return $this->redirect('/login');
 		}
+
+		return $this->render('tmpl/admin.html.php', [
+			'body' => 'Панель администратора'
+		]);
 	}
 }
