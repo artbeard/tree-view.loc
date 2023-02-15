@@ -41,7 +41,7 @@ class Controller
 	 * @param $statusCode
 	 * @return mixed
 	 */
-	protected function renderJson($data, $statusCode)
+	protected function renderJson($data, $statusCode = 200)
 	{
 		$this->response->setStatus($statusCode);
 		$this->response->setContent($data);
