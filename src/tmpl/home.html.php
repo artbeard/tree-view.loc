@@ -18,46 +18,66 @@
 			<li class="menuItem">
 				<a href="/admin">Админка</a>
 			</li>
-			<li class="menuItem">
-				<a href="/logout">Выход</a>
-			</li>
 		</ul>
 	</nav>
 	<main>
 		<h1><?= isset($title) ? $title : '' ?></h1>
 
-		<pre>
 		<?php
 		function print_tree($data)
 		{
-			echo '<ul>';
+			echo '<ul class="tree">';
 			foreach ($data as $node)
 			{
-				echo '<li>';
-				echo $node['title'];
-				if (!empty($node['child']))
-				{
-					print_tree($node['child']);
-				}
-				echo '</li>';
+				?>
+				<li class="hide-inner-node" data-toggle="<?= $node['id'] ?>">
+					<div class="tree-node">
+						<div class="tree-node-control">
+							<?php if (!empty($node['child'])): ?>
+							<button data-toggler="<?= $node['id'] ?>"><i class="icon"></i></button>
+							<?php endif; ?>
+						</div>
+						<div class="tree-node-title">
+							<div class="node-title">
+								<div class="node-title__title"><?= $node['title'] ?></div>
+								<div class="node-title__control">
+<!--									<button><i class="icon delete"></i></button>-->
+<!--									<button><i class="icon edit"></i></button>-->
+<!--									<button><i class="icon add"></i></button>-->
+								</div>
+							</div>
+							<div class="node-desc"><?= isset ($node['desc']) ? $node['desc'] : '' ?></div>
+						</div>
+					</div>
+					<?php if (!empty($node['child'])) print_tree($node['child']); ?>
+				</li>
+				<?php
 			}
 			echo '</ul>';
 		}
-		//$list
 		if (isset($list))
 		{
-			//echo print_r($list, true);
-			//print_r('133');
-			print_tree($list);
+			print_tree($list, true);
 		}
 
 		?>
-		</pre>
+
 
 	</main>
 </div>
 <script>
 	document.addEventListener('DOMContentLoaded', function (){
+		//console.log(
+			document.querySelectorAll('ul.tree button[data-toggler]').forEach(el => {
+				const marker = el.dataset.toggler;
+				const toggled = document.querySelector('li[data-toggle="' + marker + '"]');
+				el.addEventListener('click', () => {
+					toggled.classList.toggle('hide-inner-node');
+				})
+
+
+			})
+		//);
 	})
 </script>
 </body>
