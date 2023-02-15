@@ -25,7 +25,7 @@
 	</nav>
 	<main>
 		<h1><?= isset($title) ? $title : '' ?></h1>
-		<div class="authform">
+		<div class="form-container">
 			<form id="authForm">
 				<div class="form-row hidden">
 					<span class="errorInfo"></span>
