@@ -1,0 +1,78 @@
+body{
+	margin: 0;
+	padding: 0;
+	font-family: "Segoe UI", Tahoma, SansSerif;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+.container{
+	width: 1024px;
+	margin: 0 auto;
+}
+
+.container nav{
+	display: block;
+	padding: 1rem;
+}
+.container nav ul.menu{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.container nav ul.menu li.menuItem{
+	margin: 0 1rem 0 0;
+	padding: 0;
+	list-style: none;
+	display: inline-block;
+}
+
+.container nav ul.menu li.menuItem a{
+	color: blue;
+	text-decoration: none;
+}
+.container nav ul.menu li.menuItem a:hover{
+	text-decoration: underline;
+}
+
+.container nav ul.menu li.menuItem a:visited{
+	color: #50F;
+}
+
+.container main .authform{
+	width: 200px;
+	margin: 1rem auto;
+}
+
+.container main .authform .form-row{
+	padding-bottom: 1rem;
+}
+.container main .authform .form-row .errorInfo{
+	color: red;
+}
+
+.hidden{
+	display: none !important;
+}
+
+
+
+input{
+	outline: none;
+	border: 1px solid #999;
+	width: 100%;
+	padding: 0.5rem 0.75rem;
+}
+input:focus{
+	border: 1px solid #00F;
+}
+button {
+	background-color: rgba(0,0,255, 0.8);
+	border: 1px solid #00F;
+	color: #FFF;
+	padding: 0.5rem 0.75rem;
+	cursor: pointer;
+}
