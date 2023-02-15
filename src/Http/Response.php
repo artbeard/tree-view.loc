@@ -49,6 +49,8 @@ class Response implements \App\Interfaces\ResponseInterface
 	{
 		$this->status = $code;
 		$this->setHeader('Location', $location);
+		$this->setHeader('Pragma', 'no-cache');
+		$this->setHeader('Cache-Control', 'no-cache, must-revalidate');
 	}
 
 	/**
