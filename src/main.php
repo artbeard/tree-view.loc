@@ -21,6 +21,7 @@ $router->addRoute('/logout', [\App\Controller\Auth::class, 'action_logout']);
 
 //Админка
 $router->addRoute('/admin', [\App\Controller\Admin::class, 'action_admin']);
+$router->addRoute('/api/list', [\App\Controller\Api::class, 'get_list']);
 
 
 
