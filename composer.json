@@ -1,0 +1,19 @@
+{
+    "name": "artbeard/tree-view",
+    "description": "Тестовая задача с использованием php5.6 + VanillaJS",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "artbeard"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+		"php": "5.6"
+	}
+}
