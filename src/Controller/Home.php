@@ -21,8 +21,8 @@ class Home extends Controller
 			['id' => 8, 'title' => 'Версии языка JS', 'desc' => 'Раздел о версиях', 'pid' => 3],
 
 			['id' => 9, 'title' => 'Указатели и ссылки в языке CИ', 'desc' => 'Раздел об указателях', 'pid' => 4],
-			['id' => 10, 'title' => 'Типы данных в Си', 'desc' => 'Раздел о типах данных', 'pid' => 4],
-			['id' => 11, 'title' => 'Работа с памятью в СИ', 'desc' => 'раздел о работе с памятью', 'pid' => 4],
+			['id' => 10, 'title' => 'Типы данных в Си',		 'desc' => 'Раздел о типах данных',			'pid' => 4],
+			['id' => 11, 'title' => 'Работа с памятью в Си', 'desc' => 'раздел о работе с памятью',	'pid' => 4],
 
 			['id' => 12, 'title' => 'PSR-1', 'desc' => 'Basic Coding Standard', 'pid' => 6],
 
@@ -37,7 +37,7 @@ class Home extends Controller
 			{
 				if ($node['pid'] == $pid)
 				{
-					unset($data[$n]);
+					//unset($data[$n]);
 					$child = map2tree($data, $node['id']);
 					if (!empty($child))
 					{
