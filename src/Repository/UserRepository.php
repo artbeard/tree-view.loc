@@ -8,20 +8,14 @@ class UserRepository extends Repository
 {
 	public function findByLogin($login)
 	{
-		$res = $this->db->query(
-			'SELECT * FROM user WHERE login=:login',
-			[':login' => $login],
-			UserEntity::class
-		);
+		$sql = 'SELECT * FROM user WHERE login=:login';
+		$res = $this->db->query($sql, [':login' => $login], UserEntity::class);
 		return !empty($res) ? $res[0] : null;
 	}
 
 	public function createUser($login, $password)
 	{
-		$res = $this->db->query(
-			'INSERT INTO user (login, password) VALUES (:login, :password)',
-			[':login' => $login, ':password' =>$password]
-		);
-		return $res;
+		$sql = 'INSERT INTO user (login, password) VALUES (:login, :password)';
+		return $this->db->query($sql, [':login' => $login, ':password' =>$password]);
 	}
 }
