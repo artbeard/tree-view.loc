@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Exceptions\AccessDeniedException;
 use App\Exceptions\NotFoundException;
 use App\Http\Request;
 use App\Http\Response;
@@ -28,41 +29,50 @@ $router->addRoute('/api/list', [\App\Controller\Api::class, 'get_list']);
 
 function controllerResolver($controller, $request)
 {
-	if (is_array($controller))
+	if (is_subclass_of($controller[0], Controller::class))
 	{
-		if (is_subclass_of($controller[0], Controller::class))
-		{
-			return [
-				new $controller[0]($request, new Response(), new View()),
-				$controller[1]
-			];
-		}
-		else
-		{
-			return [
-				new $controller[0](),
-				$controller[1]
-			];
-		}
+		return [
+			new $controller[0]($request, new Response(), new View()),
+			$controller[1]
+		];
 	}
-	return $controller;
+	else
+	{
+		return [
+			new $controller[0](),
+			$controller[1]
+		];
+	}
 }
 
 try {
 
 	$route = $router->matchRoute($request->getPath(), $request->getMethod());
 	$controller = controllerResolver($route[0], $request);
-	$arguments = [];
-	if (isset($route[1]))
+
+
+	//Если response готов - отдаем
+	if ($controller[0]->getResponse()->isReady())
 	{
-		$arguments = $route[1]();
+		$controller[0]->getResponse()->send();
 	}
-
-	$response = call_user_func_array($controller, $arguments);
-	$response->send();
-
+	//Иначе, резолвим аргументы и вызываем action
+	else
+	{
+		$arguments = [];
+		if (isset($route[1]))
+		{
+			$arguments = $route[1]();
+		}
+		$response = call_user_func_array($controller, $arguments);
+		$response->send();
+	}
 }
 catch (NotFoundException $e)
+{
+	echo $e->getMessage();
+}
+catch (AccessDeniedException $e)
 {
 	echo $e->getMessage();
 }
