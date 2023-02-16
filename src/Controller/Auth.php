@@ -10,7 +10,7 @@ class Auth  extends Controller
 	use SecureTrait;
 
 	/**
-	 * Вывод формы авторизации
+	 * Вывод формы для аутентификации
 	 * @return \App\Http\Response
 	 */
 	public function action_login()
