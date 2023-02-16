@@ -51,7 +51,7 @@
 			const password = this.querySelector('input[name="password"]');
 			const errorInfo = this.querySelector('span.errorInfo');
 			errorInfo.parentNode.classList.add('hidden');
-
+			document.body.classList.add('fetch');
 			fetch('/login', {
 				method: 'POST',
 				body: JSON.stringify({login: login.value, password: password.value})
@@ -62,13 +62,15 @@
 					//Авторизация прошла успешно
 					document.location.replace('/admin');
 				}
-				return response.json();
-			})
-			.then(data => {
-				if (data.message)
+				else
 				{
-					errorInfo.innerText = data.message;
-					errorInfo.parentNode.classList.remove('hidden');
+					response.json().then(data => {
+						if (data.message)
+						{
+							errorInfo.innerText = data.message;
+							errorInfo.parentNode.classList.remove('hidden');
+						}
+					});
 				}
 			})
 			.catch(err => {
@@ -76,6 +78,7 @@
 				errorInfo.innerText = 'Ошибка запроса';
 				errorInfo.parentNode.classList.remove('hidden');
 			})
+			.finally(()=>{document.body.classList.remove('fetch')});
 
 		})
 	})
