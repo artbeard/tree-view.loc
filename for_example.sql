@@ -11,7 +11,7 @@ CREATE TABLE `user` (
 INSERT INTO user
     (login, password)
 VALUES
-    ('user', '$2y$10$65.QH5OR.d3bgoVtzgi7i.nMebFvIdV82dW4j4VF4n6MjsdcwzRua');
+    ('admin', '$2y$10$65.QH5OR.d3bgoVtzgi7i.nMebFvIdV82dW4j4VF4n6MjsdcwzRua');
 
 CREATE TABLE `part` (
      `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
