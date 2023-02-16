@@ -58,4 +58,12 @@ class Controller
 		$this->response->setRedirect($location);
 		return $this->response;
 	}
+
+	/**
+	 * @return Response
+	 */
+	public function getResponse()
+	{
+		return $this->response;
+	}
 }
