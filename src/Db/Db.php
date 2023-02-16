@@ -11,6 +11,44 @@ class Db
 		$this->dbHandler = new \PDO($dsn, $user, $pass);
 	}
 
+	/**
+	 * @param $sql
+	 * @param array $params
+	 * @return array|false
+	 */
+	public function insert($sql, array $params = [])
+	{
+		$q = $this->dbHandler->prepare($sql);
+		if ($q->execute($params))
+		{
+			return ['id' => $this->dbHandler->lastInsertId()];
+		}
+		return false;
+	}
+
+	/**
+	 * @param $sql
+	 * @param array $params
+	 * @return bool
+	 */
+	public function update($sql, array $params = [])
+	{
+		$q = $this->dbHandler->prepare($sql);
+		return $q->execute($params);
+	}
+
+	public function remove($sql, array $params = [])
+	{
+		$q = $this->dbHandler->prepare($sql);
+		return $q->execute($params);
+	}
+
+	/**
+	 * @param $sql
+	 * @param array $params
+	 * @param string $class
+	 * @return array|false
+	 */
 	public function query($sql, array $params = [], $class = \stdClass::class)
 	{
 		$q = $this->dbHandler->prepare($sql);
