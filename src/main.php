@@ -6,6 +6,8 @@ use App\Exceptions\AccessDeniedException;
 use App\Exceptions\NotFoundException;
 use App\Http\Request;
 use App\Http\Response;
+use App\Repository\PartRepository;
+use App\Services\PartService;
 use App\Services\UserService;
 use App\View\View;
 use App\Controller\Controller;
@@ -15,26 +17,16 @@ use App\Repository\UserRepository;
 $router = new Router\Router();
 $request = new Request();
 
-/*
- * CREATE TABLE `user` (
-  `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `login` varchar(15) NOT NULL,
-  `password` varchar(256) NOT NULL
-) ENGINE='InnoDB' COLLATE 'utf8_general_ci';
-user	$2y$10$65.QH5OR.d3bgoVtzgi7i.nMebFvIdV82dW4j4VF4n6MjsdcwzRua
- *
- *
- * CREATE TABLE `parts` (
-  `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `title` varchar(128) NOT NULL,
-  `desc` varchar(512) NOT NULL,
-  `pid` int NOT NULL
-) ENGINE='InnoDB';
- * */
-
 
 //Публичная страница
-$router->addRoute('/', [\App\Controller\Home::class, 'action_home']);
+$router->addRoute('/', [\App\Controller\Home::class, 'action_home', function(){
+	$db = new Db('mysql:host=localhost;dbname=treeview', 'root', 'root');
+	$partRepository = new PartRepository($db);
+	$partService = new PartService($partRepository);
+	return [
+		'partService' => $partService,
+	];
+}]);
 
 //Роутеры авторизации
 $router->addRoute('/login', [\App\Controller\Auth::class, 'action_login']);
