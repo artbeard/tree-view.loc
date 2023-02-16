@@ -1,4 +1,5 @@
 CREATE DATABASE `treeview` COLLATE 'utf8_general_ci';
+USE `treeview`;
 
 -- Создание таблицы пользователей
 CREATE TABLE `user` (
@@ -8,7 +9,7 @@ CREATE TABLE `user` (
 ) ENGINE='InnoDB' COLLATE 'utf8_general_ci';
 
 -- Добавление демоучетки admin:admin
-INSERT INTO user
+INSERT INTO `user`
     (login, password)
 VALUES
     ('admin', '$2y$10$65.QH5OR.d3bgoVtzgi7i.nMebFvIdV82dW4j4VF4n6MjsdcwzRua');
