@@ -340,7 +340,7 @@ function treeView()
 			const el = button.closest('li[data-title]');
 			el.classList.add('movement');
 			const followCursor = (x, y) => {
-				el.style.left = x - el.offsetWidth / 2 + 'px';
+				el.style.left = (x + 5) + 'px';
 				el.style.top  = y - el.offsetHeight / 2 + 'px';
 			};
 			const onMouseMove = (event) =>{
