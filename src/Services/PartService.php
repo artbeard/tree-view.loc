@@ -88,25 +88,24 @@ class PartService extends Service
 		}
 		return $list;
 	}
-
+	//Удаление узла
 	public function deletePartChain($id)
 	{
 		$flat = $this->getAllParts();
 		$chain = $this->calculateChildren($flat, $id);
-		$this->getRepository()->removeLst($chain);
+		return $this->getRepository()->removeLst($chain);
 	}
 
+	/**
+	 * Перемещение узлов
+	 * @param $id
+	 * @param $toId
+	 */
 	public function movePart($id, $toId)
 	{
 		$part = $this->getOne(['id' => $id]);
-		print_r($part);
 		$part->setPid($toId);
-		print_r($part);
-		print_r(
-			$this->getRepository()->saveEntity($part)
-		); exit();
-
-		//return $this->getRepository()->saveEntity($part);
+		return $this->getRepository()->saveEntity($part);
 	}
 
 }

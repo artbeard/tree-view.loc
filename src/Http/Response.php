@@ -7,6 +7,9 @@ class Response implements \App\Interfaces\ResponseInterface
 	protected $status = 200;
 	protected $headers = [];
 	protected $content = null;
+	/**
+	 * @var bool Флаг готовности response к отдаче
+	 */
 	protected $isReady = false;
 
 	/**

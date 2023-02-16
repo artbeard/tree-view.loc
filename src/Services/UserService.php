@@ -16,8 +16,13 @@ class UserService extends Service
 		return false;
 	}
 
+
 	public function createUser(UserEntity $user)
 	{
-		$this->repository->createUser($user->getLogin(), password_hash($user->getPassword(), PASSWORD_BCRYPT ));
+		return $this->repository->createUser(
+			$user->getLogin(),
+			password_hash($user->getPassword(),
+			PASSWORD_BCRYPT)
+		);
 	}
 }

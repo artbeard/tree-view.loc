@@ -58,13 +58,10 @@ class PartRepository extends Repository
 	public function removeLst($listId)
 	{
 		$sql = 'DELETE FROM part WHERE id IN ';
-
 		//Собираем ключи и данные для PDO
 		$keys = array_map(function($key){return ':id'.$key;}, $listId);
 		$data = array_combine($keys, $listId);
-
 		$sql .= '( ' . implode(', ', $keys) . ' )';
-
 		$res = $this->db->remove($sql, $data);
 		return $res;
 	}

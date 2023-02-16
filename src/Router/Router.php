@@ -2,8 +2,8 @@
 
 namespace App\Router;
 use App\Exceptions\NotFoundException;
-
-class Router implements \App\Interfaces\RouterInterface
+use \App\Interfaces\RouterInterface;
+class Router implements RouterInterface
 {
 
 	protected $routes = [];

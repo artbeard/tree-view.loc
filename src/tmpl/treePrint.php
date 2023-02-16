@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Функция отрисовки дерева
+ * @param $data
+ * @param false $admin
+ */
 function treePrint($data, $admin = false)
 {
 	echo '<ul class="tree">';

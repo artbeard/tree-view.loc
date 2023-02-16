@@ -15,12 +15,6 @@
 			<li class="menuItem">
 				<a href="/">Главная</a>
 			</li>
-			<li class="menuItem">
-				<a href="/admin">Админка</a>
-			</li>
-			<li class="menuItem">
-				<a href="/logout">Выход</a>
-			</li>
 		</ul>
 	</nav>
 	<main>
