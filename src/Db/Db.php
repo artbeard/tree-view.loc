@@ -37,6 +37,11 @@ class Db
 		return $q->execute($params);
 	}
 
+	/**
+	 * @param $sql
+	 * @param array $params
+	 * @return bool
+	 */
 	public function remove($sql, array $params = [])
 	{
 		$q = $this->dbHandler->prepare($sql);
