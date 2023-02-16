@@ -30,26 +30,7 @@
 		}
 		?>
 	</main>
-	<div class="modal hidden">
-		<div class="form-container">
-			<form id="addNodeForm">
-				<div class="form-row hidden">
-					<span class="errorInfo"></span>
-				</div>
-				<div class="form-row">
-					<input type="text" name="title" required placeholder="Загловок">
-				</div>
-				<div class="form-row">
-					<input type="text" name="desc" required placeholder="Описание">
-				</div>
-				<div class="form-row">
-					<button type="button" class="onOk">Добавить</button>
-					<button type="button" class="onCancel">Отмена</button>
-				</div>
-			</form>
-		</div>
-	</div>
 </div>
-<script src="/assets/js/tree-view.js?<?= time() ?>"></script>
+<script src="/assets/js/tree-view.js"></script>
 </body>
 </html>
