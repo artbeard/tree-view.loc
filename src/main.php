@@ -15,21 +15,26 @@ use App\Db\Db;
 use App\Repository\UserRepository;
 
 /**
- * ************ вместо DI *********
+ * ************ вместо DI )) *********
  */
+$config = [
+	'dbname' => 'treeview',
+	'dbUser' => 'root', //подставить свое
+	'dbPass' => 'root', //подставить свое
+];
 $router = new Router\Router();
 $request = new Request();
 
-$action_home_resolver = function (){
-	$db = new Db('mysql:host=localhost;dbname=treeview', 'root', 'root');
+$action_home_resolver = function () use ($config) {
+	$db = new Db('mysql:host=localhost;dbname='.$config['dbname'], $config['dbUser'], $config['dbPass']);
 	$partRepository = new PartRepository($db);
 	$partService = new PartService($partRepository);
 	return [
 		'partService' => $partService,
 	];
 };
-$action_authenticate_resolver = function(){
-	$db = new Db('mysql:host=localhost;dbname=treeview', 'root', 'root');
+$action_authenticate_resolver = function() use ($config) {
+	$db = new Db('mysql:host=localhost;dbname='.$config['dbname'], $config['dbUser'], $config['dbPass']);
 	$userRepository = new UserRepository($db);
 	$userService = new UserService($userRepository);
 	return [
