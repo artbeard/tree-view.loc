@@ -1,8 +1,40 @@
 function treeView()
 {
+	//Типа анимация ajax запрсов
+	function fetch_anim(status = false)
+	{
+		if (status)
+		{
+			document.body.classList.add('fetch')
+		}
+		else
+		{
+			document.body.classList.remove('fetch')
+		}
+	}
+
 	function ModalBox()
 	{
-		this.mbox = document.querySelector('.modal');
+		this.mbox = document.createElement('div');
+		this.mbox.classList.add('modal', 'hidden');
+		this.mbox.innerHTML = `<div class="form-container">
+			<form id="addNodeForm">
+				<div class="form-row hidden">
+					<span class="errorInfo"></span>
+				</div>
+				<div class="form-row">
+					<input type="text" name="title" required placeholder="Загловок">
+				</div>
+				<div class="form-row">
+					<input type="text" name="desc" required placeholder="Описание">
+				</div>
+				<div class="form-row">
+					<button type="button" class="onOk">Добавить</button>
+					<button type="button" class="onCancel">Отмена</button>
+				</div>
+			</form>
+		</div>`;
+		document.body.append(this.mbox);
 
 		this.onOkCallback = function (){}
 
@@ -119,6 +151,7 @@ function treeView()
 
 		if (confirm('Удалить элемент?'))
 		{
+			fetch_anim(true);
 			fetch('/api/list', {
 				method: 'DELETE',
 				body: JSON.stringify({ id: id })
@@ -141,6 +174,7 @@ function treeView()
 				}
 			})
 			.catch(err => console.log(err))
+			.finally(()=>{ fetch_anim(); })
 		}
 	}
 
@@ -148,6 +182,7 @@ function treeView()
 	{
 		const id = initiator.closest('li').dataset.toggle;
 		modalBox.show((nodeFields)=>{
+			fetch_anim(true);
 			fetch('/api/list', {
 				method: 'POST',
 				body: JSON.stringify({
@@ -187,6 +222,7 @@ function treeView()
 				}
 			})
 			.catch(err => console.log(err))
+			.finally(()=>{ fetch_anim(); })
 		});
 	}
 
@@ -195,6 +231,7 @@ function treeView()
 		const id = initiator.dataset.edit;
 		const node = initiator.closest(`li[data-toggle="${id}"]`);
 		modalBox.show((nodeFields)=>{
+			fetch_anim(true);
 			fetch('/api/list', {
 				method: 'PATCH',
 				body: JSON.stringify({
@@ -214,6 +251,7 @@ function treeView()
 					}
 				})
 				.catch(err => console.log(err))
+				.finally(()=>{ fetch_anim(); })
 			},
 			{
 				title: node.dataset.title,
@@ -224,6 +262,7 @@ function treeView()
 	function moveNode(node, target)
 	{
 		if (node.dataset.toggle === target.dataset.toggle) return;
+		fetch_anim(true);
 		fetch('/api/list/move', {
 				method: 'PATCH',
 				body: JSON.stringify({
@@ -250,6 +289,7 @@ function treeView()
 				}
 			})
 			.catch(err => console.log(err))
+			.finally(()=>{ fetch_anim(); })
 	}
 
 	document.addEventListener('click', function (event){
