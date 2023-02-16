@@ -11,4 +11,9 @@ abstract class Service
 		$this->repository = $repository;
 	}
 
+	public function getRepository()
+	{
+		return $this->repository;
+	}
+
 }
