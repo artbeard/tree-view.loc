@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 
+use App\Services\UserService;
+
 class Auth  extends Controller
 {
 	use SecureTrait;
@@ -14,10 +16,11 @@ class Auth  extends Controller
 		]);
 	}
 
-	public function action_authenticate()
+	public function action_authenticate(UserService $userService)
 	{
 		$dataAuth = $this->request->getBody();
-		if ($dataAuth['login'] == 'admin' && $dataAuth['password'] == 'admin')
+
+		if ($userService->checkAuth($dataAuth['login'], $dataAuth['password']))
 		{
 			$this->setAuthCoolie();
 			return $this->renderJson([], 204);
