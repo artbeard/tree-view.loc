@@ -9,6 +9,10 @@ class Auth  extends Controller
 {
 	use SecureTrait;
 
+	/**
+	 * Вывод формы авторизации
+	 * @return \App\Http\Response
+	 */
 	public function action_login()
 	{
 		return $this->render('tmpl/auth.html.php', [
@@ -16,6 +20,11 @@ class Auth  extends Controller
 		]);
 	}
 
+	/**
+	 * Аутентификация
+	 * @param UserService $userService
+	 * @return \App\Http\Response|mixed
+	 */
 	public function action_authenticate(UserService $userService)
 	{
 		$dataAuth = $this->request->getBody();
@@ -31,7 +40,10 @@ class Auth  extends Controller
 		], 401);
 	}
 
-
+	/**
+	 * Разлогивание
+	 * @return \App\Http\Response|mixed
+	 */
 	public function action_logout()
 	{
 		$this->removeAuthCoolie();
