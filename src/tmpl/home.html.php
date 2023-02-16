@@ -22,63 +22,34 @@
 	</nav>
 	<main>
 		<h1><?= isset($title) ? $title : '' ?></h1>
-
 		<?php
-		function print_tree($data)
-		{
-			echo '<ul class="tree">';
-			foreach ($data as $node)
-			{
-				?>
-				<li class="hide-inner-node" data-toggle="<?= $node['id'] ?>">
-					<div class="tree-node">
-						<div class="tree-node-control">
-							<?php if (!empty($node['child'])): ?>
-							<button data-toggler="<?= $node['id'] ?>"><i class="icon"></i></button>
-							<?php endif; ?>
-						</div>
-						<div class="tree-node-title">
-							<div class="node-title">
-								<div class="node-title__title"><?= $node['title'] ?></div>
-								<div class="node-title__control">
-<!--									<button><i class="icon delete"></i></button>-->
-<!--									<button><i class="icon edit"></i></button>-->
-<!--									<button><i class="icon add"></i></button>-->
-								</div>
-							</div>
-							<div class="node-desc"><?= isset ($node['desc']) ? $node['desc'] : '' ?></div>
-						</div>
-					</div>
-					<?php if (!empty($node['child'])) print_tree($node['child']); ?>
-				</li>
-				<?php
-			}
-			echo '</ul>';
-		}
+		include 'treePrint.php';
 		if (isset($list))
 		{
-			print_tree($list, true);
+			treePrint($list);
 		}
-
 		?>
-
-
 	</main>
+	<div class="modal hidden">
+		<div class="form-container">
+			<form id="addNodeForm">
+				<div class="form-row hidden">
+					<span class="errorInfo"></span>
+				</div>
+				<div class="form-row">
+					<input type="text" name="title" required placeholder="Загловок">
+				</div>
+				<div class="form-row">
+					<input type="text" name="desc" required placeholder="Описание">
+				</div>
+				<div class="form-row">
+					<button type="button" class="onOk">Добавить</button>
+					<button type="button" class="onCancel">Отмена</button>
+				</div>
+			</form>
+		</div>
+	</div>
 </div>
-<script>
-	document.addEventListener('DOMContentLoaded', function (){
-		//console.log(
-			document.querySelectorAll('ul.tree button[data-toggler]').forEach(el => {
-				const marker = el.dataset.toggler;
-				const toggled = document.querySelector('li[data-toggle="' + marker + '"]');
-				el.addEventListener('click', () => {
-					toggled.classList.toggle('hide-inner-node');
-				})
-
-
-			})
-		//);
-	})
-</script>
+<script src="/assets/js/tree-view.js"></script>
 </body>
 </html>
