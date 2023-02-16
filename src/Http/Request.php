@@ -9,8 +9,6 @@ class Request implements RequestInterface
 	protected $path = '/';
 	protected $body = null;
 
-
-
 	public function __construct()
 	{
 		$this->method = strtoupper($_SERVER['REQUEST_METHOD']);
