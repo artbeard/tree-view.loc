@@ -2,23 +2,27 @@
 
 namespace App\Controller;
 
-use App\Interfaces\Guard;
+use App\Http\Request;
+use App\Http\Response;
+use App\View\View;
 
-class Admin  extends Controller implements Guard
+class Admin  extends Controller
 {
+	use SecureTrait;
 
-	public function hasAccess()
+	public function __construct(...$args)
 	{
-		return isset($_COOKIE['auth']);
+		parent::__construct(...$args);
+		//Проверка аутентификации
+		if (!$this->checkAuthCoolie())
+		{
+			$this->response->setRedirect('/login');
+		}
 	}
+
 
 	public function action_admin()
 	{
-		if (!$this->hasAccess())
-		{
-			return $this->redirect('/login');
-		}
-
 		//Для отладки
 		$structure = [
 			['id' => 1, 'title' => 'Каталог', 'desc' => 'Каталог документов о языках программирования', 'pid' => null],
@@ -39,7 +43,6 @@ class Admin  extends Controller implements Guard
 
 			['id' => 12, 'title' => 'PSR-1', 'desc' => 'Basic Coding Standard', 'pid' => 6],
 
-			//todo почему этот не попадает???
 			['id' => 13, 'title' => 'Еще один в корне', 'desc' => 'Basic Coding Standard', 'pid' => null],
 		];
 

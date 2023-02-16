@@ -2,10 +2,10 @@
 
 namespace App\Controller;
 
-//use App\Interfaces\Guard;
 
 class Auth  extends Controller
 {
+	use SecureTrait;
 
 	public function action_login()
 	{
@@ -19,12 +19,7 @@ class Auth  extends Controller
 		$dataAuth = $this->request->getBody();
 		if ($dataAuth['login'] == 'admin' && $dataAuth['password'] == 'admin')
 		{
-			setcookie(
-				'auth',
-				md5(time()),
-				time() + 60 * 60
-				//,'/', $_SERVER['HTTP_HOST'], false, true
-			);
+			$this->setAuthCoolie();
 			return $this->renderJson([], 204);
 		}
 
@@ -36,12 +31,7 @@ class Auth  extends Controller
 
 	public function action_logout()
 	{
-		setcookie(
-			'auth',
-			0,
-			time() - 60 * 60
-		//,'/', $_SERVER['HTTP_HOST'], false, true
-		);
+		$this->removeAuthCoolie();
 		return $this->redirect('/');
 	}
 }

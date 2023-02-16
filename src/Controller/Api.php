@@ -2,22 +2,24 @@
 
 namespace App\Controller;
 
-use App\Interfaces\Guard;
+use App\Exceptions\AccessDeniedException;
 
-class Api  extends Controller implements Guard
+class Api  extends Controller
 {
+	use SecureTrait;
 
-	public function hasAccess()
+	public function __construct(...$args)
 	{
-		return isset($_COOKIE['auth']);
+		parent::__construct(...$args);
+		//Проверка аутентификации
+		if (!$this->checkAuthCoolie())
+		{
+			throw new AccessDeniedException('Доступ запрещен');
+		}
 	}
 
 	public function get_list()
 	{
-		if (!$this->hasAccess())
-		{
-			return $this->redirect('/login');
-		}
 
 //Для отладки
 		$structure = [
