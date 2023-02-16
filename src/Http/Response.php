@@ -7,7 +7,16 @@ class Response implements \App\Interfaces\ResponseInterface
 	protected $status = 200;
 	protected $headers = [];
 	protected $content = null;
+	protected $isReady = false;
 
+	/**
+	 * Возвращает готовность response к отдаче
+	 * @return bool
+	 */
+	public function isReady()
+	{
+		return $this->isReady;
+	}
 
 	/**
 	 * @inheritDoc
@@ -32,6 +41,7 @@ class Response implements \App\Interfaces\ResponseInterface
 			$this->setHeader('Content-Type','text/html; charset=utf-8');
 			$this->content = $content;
 		}
+		$this->isReady = true;
 	}
 
 	/**
@@ -51,6 +61,7 @@ class Response implements \App\Interfaces\ResponseInterface
 		$this->setHeader('Location', $location);
 		$this->setHeader('Pragma', 'no-cache');
 		$this->setHeader('Cache-Control', 'no-cache, must-revalidate');
+		$this->isReady = true;
 	}
 
 	/**
