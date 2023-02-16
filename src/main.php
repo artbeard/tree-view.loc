@@ -17,33 +17,39 @@ use App\Repository\UserRepository;
 $router = new Router\Router();
 $request = new Request();
 
-
-//Публичная страница
-$router->addRoute('/', [\App\Controller\Home::class, 'action_home', function(){
+$action_home_resolver = function (){
 	$db = new Db('mysql:host=localhost;dbname=treeview', 'root', 'root');
 	$partRepository = new PartRepository($db);
 	$partService = new PartService($partRepository);
 	return [
 		'partService' => $partService,
 	];
-}]);
+};
 
-//Роутеры авторизации
-$router->addRoute('/login', [\App\Controller\Auth::class, 'action_login']);
-$router->addRoute('POST /login', [\App\Controller\Auth::class, 'action_authenticate', function(){
+$action_authenticate_resolver = function(){
 	$db = new Db('mysql:host=localhost;dbname=treeview', 'root', 'root');
 	$userRepository = new UserRepository($db);
 	$userService = new UserService($userRepository);
 	return [
 		'userService' => $userService
 	];
-}]);
+};
+
+//Публичная страница
+$router->addRoute('/', [\App\Controller\Home::class, 'action_home', $action_home_resolver]);
+
+//Роутеры авторизации
+$router->addRoute('/login', [\App\Controller\Auth::class, 'action_login']);
+$router->addRoute('POST /login', [\App\Controller\Auth::class, 'action_authenticate', $action_authenticate_resolver]);
 $router->addRoute('/logout', [\App\Controller\Auth::class, 'action_logout']);
 
 //Админка
-$router->addRoute('/admin', [\App\Controller\Admin::class, 'action_admin']);
-$router->addRoute('/api/list', [\App\Controller\Api::class, 'get_list']);
-
+$router->addRoute('/admin', [\App\Controller\Admin::class, 'action_admin', $action_home_resolver]);
+$router->addRoute('/api/list', [\App\Controller\Api::class, 'get_list', $action_home_resolver]);
+$router->addRoute('POST /api/list', [\App\Controller\Api::class, 'add_node', $action_home_resolver]);
+$router->addRoute('PATCH /api/list', [\App\Controller\Api::class, 'update_node', $action_home_resolver]);
+$router->addRoute('DELETE /api/list', [\App\Controller\Api::class, 'delete_chain', $action_home_resolver]);
+$router->addRoute('PATCH /api/list/move', [\App\Controller\Api::class, 'move_node', $action_home_resolver]);
 
 
 
