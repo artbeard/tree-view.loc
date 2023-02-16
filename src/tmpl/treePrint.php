@@ -12,7 +12,9 @@ function treePrint($data, $admin = false)
 		    data-desc="<?= $node['desc'] ?>">
 			<div class="tree-node">
 				<div class="tree-node-control">
+					<?php if ($admin): ?>
 					<button data-move="<?= $node['id'] ?>"><i class="icon move"></i></button>
+					<?php endif; ?>
 				</div>
 				<div class="tree-node-title">
 					<div class="node-title">
