@@ -14,6 +14,9 @@ use App\Controller\Controller;
 use App\Db\Db;
 use App\Repository\UserRepository;
 
+/**
+ * ************ вместо DI *********
+ */
 $router = new Router\Router();
 $request = new Request();
 
@@ -25,7 +28,6 @@ $action_home_resolver = function (){
 		'partService' => $partService,
 	];
 };
-
 $action_authenticate_resolver = function(){
 	$db = new Db('mysql:host=localhost;dbname=treeview', 'root', 'root');
 	$userRepository = new UserRepository($db);
@@ -34,24 +36,6 @@ $action_authenticate_resolver = function(){
 		'userService' => $userService
 	];
 };
-
-//Публичная страница
-$router->addRoute('/', [\App\Controller\Home::class, 'action_home', $action_home_resolver]);
-
-//Роутеры авторизации
-$router->addRoute('/login', [\App\Controller\Auth::class, 'action_login']);
-$router->addRoute('POST /login', [\App\Controller\Auth::class, 'action_authenticate', $action_authenticate_resolver]);
-$router->addRoute('/logout', [\App\Controller\Auth::class, 'action_logout']);
-
-//Админка
-$router->addRoute('/admin', [\App\Controller\Admin::class, 'action_admin', $action_home_resolver]);
-$router->addRoute('/api/list', [\App\Controller\Api::class, 'get_list', $action_home_resolver]);
-$router->addRoute('POST /api/list', [\App\Controller\Api::class, 'add_node', $action_home_resolver]);
-$router->addRoute('PATCH /api/list', [\App\Controller\Api::class, 'update_node', $action_home_resolver]);
-$router->addRoute('DELETE /api/list', [\App\Controller\Api::class, 'delete_chain', $action_home_resolver]);
-$router->addRoute('PATCH /api/list/move', [\App\Controller\Api::class, 'move_node', $action_home_resolver]);
-
-
 
 function controllerResolver($controller, $request)
 {
@@ -71,12 +55,25 @@ function controllerResolver($controller, $request)
 	}
 }
 
+//РОутинг
+//Публичная страница
+$router->addRoute('/', [\App\Controller\Home::class, 'action_home', $action_home_resolver]);
+//Роутеры авторизации
+$router->addRoute('/login', [\App\Controller\Auth::class, 'action_login']);
+$router->addRoute('POST /login', [\App\Controller\Auth::class, 'action_authenticate', $action_authenticate_resolver]);
+$router->addRoute('/logout', [\App\Controller\Auth::class, 'action_logout']);
+//Админка
+$router->addRoute('/admin', [\App\Controller\Admin::class, 'action_admin', $action_home_resolver]);
+$router->addRoute('/api/list', [\App\Controller\Api::class, 'get_list', $action_home_resolver]);
+$router->addRoute('POST /api/list', [\App\Controller\Api::class, 'add_node', $action_home_resolver]);
+$router->addRoute('PATCH /api/list', [\App\Controller\Api::class, 'update_node', $action_home_resolver]);
+$router->addRoute('DELETE /api/list', [\App\Controller\Api::class, 'delete_chain', $action_home_resolver]);
+$router->addRoute('PATCH /api/list/move', [\App\Controller\Api::class, 'move_node', $action_home_resolver]);
+
+// выполняем запрос
 try {
-
-	$route = $router->matchRoute($request->getPath(), $request->getMethod());
-	$controller = controllerResolver($route[0], $request);
-
-
+	$route = $router->matchRoute($request->getPath(), $request->getMethod())[0];
+	$controller = controllerResolver($route, $request);
 	//Если response готов - отдаем
 	if ($controller[0]->getResponse()->isReady())
 	{
@@ -86,12 +83,10 @@ try {
 	else
 	{
 		$arguments = [];
-		//print_r($route[0][2]); exit;
-		if (isset($route[0][2]))
+		if (isset($route[2]))
 		{
-			$arguments = $route[0][2]();
+			$arguments = $route[2]();
 		}
-		//print_r($arguments); exit;
 		$response = call_user_func_array($controller, $arguments);
 		$response->send();
 	}
@@ -104,9 +99,7 @@ catch (AccessDeniedException $e)
 {
 	echo $e->getMessage();
 }
-catch (\Exception $e)
+catch (\Exception $e) //вывод иных неотловленных ошибок
 {
-	echo 'Неотловленная ошибка: '.$e->getMessage();
+	echo '<h1>'.$e->getMessage().'</h1>';
 }
-
-
