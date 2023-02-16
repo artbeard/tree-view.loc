@@ -4,15 +4,11 @@ namespace App\Services;
 
 abstract class Service
 {
+	protected $repository;
 
-	protected $db;
-
-	public function __construct($db)
+	public function __construct($repository)
 	{
-		$this->db = $db;
+		$this->repository = $repository;
 	}
-
-	abstract public function findOne($condition);
-	abstract public function find($condition);
 
 }
