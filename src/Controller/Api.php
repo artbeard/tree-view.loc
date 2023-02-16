@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\PartEntity;
 use App\Exceptions\AccessDeniedException;
+use App\Services\PartService;
 
 class Api  extends Controller
 {
@@ -12,64 +14,58 @@ class Api  extends Controller
 	{
 		parent::__construct(...$args);
 		//Проверка аутентификации
-		if (!$this->checkAuthCoolie())
-		{
-			throw new AccessDeniedException('Доступ запрещен');
-		}
+//		if (!$this->checkAuthCoolie())
+//		{
+//			throw new AccessDeniedException('Доступ запрещен');
+//		}
 	}
 
-	public function get_list()
+	/**
+	 * Возвращает древовидный список
+	 * @param PartService $partService
+	 * @return \App\Http\Response JSON
+	 */
+	public function get_list(PartService $partService)
 	{
-
-//Для отладки
-		$structure = [
-			['id' => 1, 'title' => 'Каталог', 'desc' => 'Каталог документов о языках программирования', 'pid' => null],
-
-			['id' => 2, 'title' => 'PHP', 'desc' => 'Раздел о PHP', 'pid' => 1],
-			['id' => 3, 'title' => 'JavaScript', 'desc' => 'Раздел о JavaScript', 'pid' => 1],
-			['id' => 4, 'title' => 'Cи', 'desc' => 'Раздел о Си', 'pid' => 1],
-
-			['id' => 5, 'title' => 'Фреймворки Php', 'desc' => 'Раздел о фреймоврках', 'pid' => 2],
-			['id' => 6, 'title' => 'Стандарты кодирования PHP', 'desc' => 'Раздел о стандартах PSR', 'pid' => 2],
-
-			['id' => 7, 'title' => 'Фреймворки JavaScript', 'desc' => 'Раздел о фреймворках', 'pid' => 3],
-			['id' => 8, 'title' => 'Версии языка JS', 'desc' => 'Раздел о версиях', 'pid' => 3],
-
-			['id' => 9, 'title' => 'Указатели и ссылки в языке CИ', 'desc' => 'Раздел об указателях', 'pid' => 4],
-			['id' => 10, 'title' => 'Типы данных в Си',		 'desc' => 'Раздел о типах данных',			'pid' => 4],
-			['id' => 11, 'title' => 'Работа с памятью в Си', 'desc' => 'раздел о работе с памятью',	'pid' => 4],
-
-			['id' => 12, 'title' => 'PSR-1', 'desc' => 'Basic Coding Standard', 'pid' => 6],
-
-			//todo почему этот не попадает???
-			['id' => 13, 'title' => 'Еще один в корне', 'desc' => 'Basic Coding Standard', 'pid' => null],
-		];
-
-		function map2tree(&$data, $pid = null)
-		{
-			$tree = [];
-			foreach ($data as $n => $node)
-			{
-				if ($node['pid'] == $pid)
-				{
-					//unset($data[$n]);
-					$child = map2tree($data, $node['id']);
-					if (!empty($child))
-					{
-						$node['child'] = $child;
-					}
-					unset($node['pid']);
-					$tree[] = $node;
-				}
-			}
-			return $tree;
-		}
-
-		$tree = map2tree($structure);
-
+		$tree = $partService->getTreeArray();
 		return $this->renderJson([
 			'treeList' => $tree
 		]);
-
 	}
+
+	public function add_node(PartService $partService)
+	{
+		$data = $this->request->getBody();
+		$part = new PartEntity();
+		$part->setTitle($data['title']);
+		$part->setDesc($data['desc']);
+		$part->setPid($data['pid']);
+		$part = $partService->addPart($part);
+		return $this->renderJson(['id' => $part->getId()], 201);
+	}
+
+	public function update_node(PartService $partService)
+	{
+		$data = $this->request->getBody();
+		$part = $partService->getOne(['id' => $data['id']]);
+		$part->setTitle($data['title']);
+		$part->setDesc($data['desc']);
+		$partService->savePart($part);
+		return $this->renderJson([], 204);
+	}
+
+	public function delete_chain(PartService $partService)
+	{
+		$data = $this->request->getBody();
+		$partService->deletePartChain($data['id']);
+		return $this->renderJson([], 204);
+	}
+
+	public function move_node(PartService $partService)
+	{
+		$data = $this->request->getBody();
+		$partService->movePart($data['id'], $data['to_id']);
+		return $this->renderJson([], 204);
+	}
+
 }

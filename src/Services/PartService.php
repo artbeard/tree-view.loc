@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Entity\PartEntity;
+
 class PartService extends Service
 {
 	/**
@@ -52,6 +54,59 @@ class PartService extends Service
 			}
 		}
 		return $tree;
+	}
+
+	public function getOne($condition)
+	{
+		return $this->getRepository()->findOne($condition);
+	}
+
+	public function addPart(PartEntity $part)
+	{
+		return $this->getRepository()->saveEntity($part);
+	}
+
+	public function savePart(PartEntity $part)
+	{
+		return $this->getRepository()->saveEntity($part);
+	}
+
+	/**
+	 * @param $flatList
+	 * @param $id
+	 * @return array массив id узла и потомков
+	 */
+	protected function calculateChildren(&$flatList, $id)
+	{
+		$list = [$id];
+		foreach ($flatList as $n => $part)
+		{
+			if (in_array($part->getPid(), $list))
+			{
+				$list[] = $part->getId();
+			}
+		}
+		return $list;
+	}
+
+	public function deletePartChain($id)
+	{
+		$flat = $this->getAllParts();
+		$chain = $this->calculateChildren($flat, $id);
+		$this->getRepository()->removeLst($chain);
+	}
+
+	public function movePart($id, $toId)
+	{
+		$part = $this->getOne(['id' => $id]);
+		print_r($part);
+		$part->setPid($toId);
+		print_r($part);
+		print_r(
+			$this->getRepository()->saveEntity($part)
+		); exit();
+
+		//return $this->getRepository()->saveEntity($part);
 	}
 
 }
