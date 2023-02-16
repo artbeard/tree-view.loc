@@ -15,4 +15,13 @@ class UserRepository extends Repository
 		);
 		return !empty($res) ? $res[0] : null;
 	}
+
+	public function createUser($login, $password)
+	{
+		$res = $this->db->query(
+			'INSERT INTO user (login, password) VALUES (:login, :password)',
+			[':login' => $login, ':password' =>$password]
+		);
+		return $res;
+	}
 }
