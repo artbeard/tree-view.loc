@@ -178,9 +178,8 @@ function treeView()
 		}
 	}
 
-	function createNewNode(initiator)
+	function createDialog(parentNode, id)
 	{
-		const id = initiator.closest('li').dataset.toggle;
 		modalBox.show((nodeFields)=>{
 			fetch_anim(true);
 			fetch('/api/list', {
@@ -188,42 +187,55 @@ function treeView()
 				body: JSON.stringify({
 					title: nodeFields.title,
 					desc: nodeFields.desc,
-					pid: parseInt(id),
+					pid: id,
 				})
 			})
-			.then(resp => {
-				if (resp.status >= 200 && resp.status < 300)
-				{
-					resp.json()
-						.then(data => {
-							nodeFields.id = data.id;
-							let list = initiator.closest('li').querySelector('ul');
-							if (list)
-							{
-								//Добавление в этот список
-								list.append(createTreeNode(nodeFields));
-								initiator.closest('li').classList.remove('hide-inner-node');
-							}
-							else
-							{
-								//Создание списка
-								initiator.closest('li').append(
-									createTree([nodeFields])
-								)
-								const btn = document.createElement('button');
-								btn.innerHTML = '<i class="icon"></i>';
-								btn.dataset.toggler = id;
-								btn.classList.add('folder')
-								initiator.closest('li').querySelector('.node-title__control').prepend(btn);
-								initiator.closest('li').classList.remove('hide-inner-node');
-							}
-							modalBox.hide();
-						})
-				}
-			})
-			.catch(err => console.log(err))
-			.finally(()=>{ fetch_anim(); })
+				.then(resp => {
+					if (resp.status >= 200 && resp.status < 300)
+					{
+						resp.json()
+							.then(data => {
+								nodeFields.id = data.id;
+								if (parentNode.nodeName == 'UL')
+								{
+									parentNode.append(createTreeNode(nodeFields));
+								}
+								else if (parentNode.nodeName == 'LI')
+								{
+									let list = parentNode.querySelector('ul');
+									if (list)
+									{
+										//Добавление в этот список
+										list.append(createTreeNode(nodeFields));
+										parentNode.classList.remove('hide-inner-node');
+									}
+									else
+									{
+										//Создание списка
+										parentNode.append(
+											createTree([nodeFields])
+										)
+										const btn = document.createElement('button');
+										btn.innerHTML = '<i class="icon"></i>';
+										btn.dataset.toggler = id;
+										btn.classList.add('folder')
+										parentNode.querySelector('.node-title__control').prepend(btn);
+										parentNode.classList.remove('hide-inner-node');
+									}
+								}
+								modalBox.hide();
+							})
+					}
+				})
+				.catch(err => console.log(err))
+				.finally(()=>{ fetch_anim(); })
 		});
+	}
+
+	function createNewNode(initiator)
+	{
+		const id = initiator.closest('li').dataset.toggle;
+		createDialog(initiator.closest('li'), parseInt(id));
 	}
 
 	function editNode(initiator)
@@ -284,6 +296,12 @@ function treeView()
 						const ul = document.createElement('ul');
 						ul.classList.add('tree');
 						ul.append(node);
+						const btn = document.createElement('button');
+						btn.innerHTML = '<i class="icon"></i>';
+						btn.dataset.toggler = node.dataset.toggle;
+						btn.classList.add('folder')
+						target.querySelector('.node-title__control').prepend(btn);
+						target.classList.remove('hide-inner-node');
 						target.append(ul);
 					}
 				}
@@ -320,6 +338,10 @@ function treeView()
 			else if (button.dataset.edit) //Обработчик редактирования
 			{
 				editNode(button);
+			}
+			else if (button.dataset.addRoot)	//добавление в корневой раздел
+			{
+				createDialog(document.querySelector('main > ul.tree'), null);
 			}
 		}
 	});

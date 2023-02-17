@@ -136,14 +136,19 @@ button {
 	padding-right: 0.5rem;
 	min-width: 30px;
 }
-.tree-node button{
+button[data-add-root]{
+	margin-left: 1.5rem;
+}
+.tree-node button,
+button[data-add-root]{
 	background-color: transparent;
 	border: 1px solid transparent;
 	border-radius: 3px;
 	color: #333;
 	padding: 0.1rem;
 }
-.tree-node button:hover {
+.tree-node button:hover,
+button[data-add-root]:hover{
 	border-color: #999;
 }
 

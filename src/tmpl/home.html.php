@@ -24,9 +24,13 @@
 		<h1><?= isset($title) ? $title : '' ?></h1>
 		<?php
 		include 'treePrint.php';
-		if (isset($list))
+		if (!empty($list))
 		{
 			treePrint($list);
+		}
+		else
+		{
+			echo 'В каталоге нет документов';
 		}
 		?>
 	</main>

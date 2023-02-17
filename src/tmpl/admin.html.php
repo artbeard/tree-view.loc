@@ -22,11 +22,16 @@
 	</nav>
 	<main>
 		<h1><?= isset($title) ? $title : '' ?></h1>
+		<button data-add-root="1" title="добавить корневой раздел"><i class="icon add"></i></button>
 		<?php
 		include 'treePrint.php';
 		if (isset($list))
 		{
 			treePrint($list, true);
+		}
+		else
+		{
+			treePrint([], true);
 		}
 		?>
 	</main>
